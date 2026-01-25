@@ -1,0 +1,22 @@
+{{ define "main" }}
+<article class="single-page">
+  <header class="section">
+    <div class="container text-center">
+      <h1>{{ .Title }}</h1>
+      <p class="meta">{{ .Date.Format "January 2, 2006" }}</p>
+    </div>
+  </header>
+
+  <section class="section alt-bg">
+    <div class="container prose">
+      {{ .Content }}
+    </div>
+  </section>
+
+  <footer class="section">
+    <div class="container text-center">
+      <a href="{{ .Parent.RelPermalink }}" class="button">&larr; Back to {{ .Parent.Title }}</a>
+    </div>
+  </footer>
+</article>
+{{ end }}

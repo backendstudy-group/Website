@@ -1,0 +1,168 @@
+{{ define "main" }}
+<div class="landing-page">
+  <!-- Hero Section -->
+  <section class="hero section">
+    <!-- Illustrations -->
+    <div class="illustration ill-cloud">
+      <img src="{{ "/images/cloud.png" | relURL }}" alt="Cloud Computing">
+    </div>
+    <div class="illustration ill-server">
+      <img src="{{ "/images/server.png" | relURL }}" alt="Backend Server">
+    </div>
+    <!-- <div class="illustration ill-systems">
+      <img src="{{ "/images/systems.png" | relURL }}" alt="Systems Engineering">
+    </div> -->
+
+    <div class="container">
+      <h1 class="hero-title">{{ .Title }}</h1>
+      <p class="hero-tagline">{{ .Params.tagline | default .Site.Params.description }}</p>
+    </div>
+  </section>
+
+  <!-- Carousel Section (Mission & Study) -->
+  <div class="section">
+    <div class="carousel-container">
+      <div id="carousel-track" class="carousel-track">
+        <div class="carousel-slide active">
+          <div class="container">
+            <h2>Our Mission</h2>
+            <p>We are a community of engineers and students dedicated to mastering the complexities of backend systems.
+              Our sessions range from white-paper reviews to hands-on distributed systems implementation.</p>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="container">
+            <h2>What We Study</h2>
+            <ul>
+              <li><strong>Distributed Systems:</strong> Consensus algorithms like Raft.</li>
+              <li><strong>Databases:</strong> LSM-trees and query optimization.</li>
+              <li><strong>Networking:</strong> TCP/IP and HTTP/3 internals.</li>
+              <li><strong>Performance:</strong> Profiling and eBPF magic.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="carousel-dots" class="carousel-dots"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const track = document.getElementById('carousel-track');
+      const dotsContainer = document.getElementById('carousel-dots');
+      const slides = Array.from(track.children);
+      let currentIndex = 0;
+      let autoPlay;
+
+      // Create dots
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.classList.add('carousel-dot');
+        if (index === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+      });
+
+      const dots = Array.from(dotsContainer.children);
+
+      function goToSlide(index) {
+        currentIndex = index;
+        const offset = currentIndex * (slides[0].offsetWidth + 20); // 100% + margin
+        track.style.transform = `translateX(-${offset}px)`;
+
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === currentIndex));
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+
+        resetTimer();
+      }
+
+      function nextSlide() {
+        goToSlide((currentIndex + 1) % slides.length);
+      }
+
+      function resetTimer() {
+        clearInterval(autoPlay);
+        autoPlay = setInterval(nextSlide, 5000);
+      }
+
+      resetTimer();
+    });
+  </script>
+
+  <!-- Projects Preview Section -->
+  <section class="section white-bg-section project-showcase">
+    <div class="container text-center">
+      <span class="meta"
+        style="color: var(--primary); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.875rem;">Build
+        Log</span>
+      <h2 style="font-size: 3rem; margin-top: 1rem;">Recent Projects</h2>
+      <div class="grid">
+        {{ range first 3 (where .Site.RegularPages "Section" "projects") }}
+        <div class="project-card">
+          <div class="project-image-placeholder">
+            <span>&lt;Code /&gt;</span>
+          </div>
+          <div class="project-content">
+            <span class="meta">{{ .Date.Format "Jan 2006" }}</span>
+            <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            <p class="summary">{{ .Summary | truncate 150 }}</p>
+            <div class="project-links">
+              {{ with .Params.github }}
+              <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                  </path>
+                </svg>
+                Source
+              </a>
+              {{ end }}
+              {{ with .Params.demo }}
+              <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                  </path>
+                </svg>
+                Demo
+              </a>
+              {{ end }}
+            </div>
+            <div class="tags">
+              <span class="tag">System</span>
+              <span class="tag">Backend</span>
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+      <div class="cta" style="margin-top: 4rem;">
+        <a href="/projects/" class="button"
+          style="padding: 1rem 2.5rem; border-radius: 9999px; font-size: 1.125rem;">Explore All Projects</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Events Preview Section -->
+  <section class="section white-bg-section">
+    <div class="container text-center">
+      <h2>Upcoming Events</h2>
+      <div class="grid">
+        {{ range first 3 (where .Site.RegularPages "Section" "events") }}
+        <div class="card">
+          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          <p class="meta">{{ .Date.Format "January 2, 2006" }}</p>
+          <p>{{ .Summary }}</p>
+        </div>
+        {{ end }}
+      </div>
+      <div class="cta">
+        <a href="/events/" class="button">View All Events</a>
+      </div>
+    </div>
+  </section>
+</div>
+{{ end }}

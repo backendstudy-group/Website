@@ -1,0 +1,25 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'Backend Study Group'
+
+[menu]
+  [[menu.main]]
+    name = 'Home'
+    url = '/'
+    weight = 10
+  [[menu.main]]
+    name = 'Projects'
+    url = '/projects/'
+    weight = 20
+  [[menu.main]]
+    name = 'Events'
+    url = '/events/'
+    weight = 30
+
+[params]
+  description = 'A technical study group focused on backend and systems engineering.'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
