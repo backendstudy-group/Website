@@ -14,6 +14,7 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   --grid-line: rgba(44, 36, 30, 0.05);
+  --button-text: #fffaf3;
 }
 
 [data-theme="dark"] {
@@ -27,6 +28,7 @@
   --border: #3a332f;
   --grid-line: rgba(237, 234, 231, 0.05);
   --bg-pastel-gray: #3a332f;
+  --button-text: #1a1614;
 }
 
 * {
@@ -90,19 +92,24 @@ a:hover {
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   margin: 0;
   padding: 0;
+  align-items: center;
 }
 
-.nav-links a {
-  color: var(--text-muted);
-  font-weight: 500;
-}
+@media (max-width: 600px) {
+  .main-nav .container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+  }
 
-.nav-links a.active,
-.nav-links a:hover {
-  color: var(--text-main);
+  .nav-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 
 /* Sections & Alternating Backgrounds */
@@ -138,13 +145,15 @@ a:hover {
   -webkit-text-fill-color: transparent;
 }
 
-.hero-tagline {
-  font-size: 1.75rem;
-  /* color: var(--text-muted); */
-  color: #5f6b7a;
-  /* slightly darker */
-  max-width: 700px;
-  margin: 0 auto;
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.25rem;
+    padding: 0 1rem;
+  }
 }
 
 /* Floating Illustrations */
@@ -155,6 +164,12 @@ a:hover {
   opacity: 1;
   mix-blend-mode: multiply;
   /* Makes white background transparent */
+}
+
+@media (max-width: 768px) {
+  .illustration {
+    display: none;
+  }
 }
 
 .illustration img {
@@ -348,8 +363,65 @@ section:nth-of-type(even),
 }
 
 .icon-link svg {
-  width: 20px;
-  height: 20px;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px;
+  min-height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .project-content {
+    padding: 1.5rem;
+  }
+
+  .project-card h3 {
+    font-size: 1.5rem;
+  }
+
+  .white-bg-section>.container,
+  .carousel-container {
+    width: 95% !important;
+    padding: 1.5rem 1rem !important;
+    /* Reduced horizontal padding */
+  }
+
+  .carousel-slide {
+    padding: 1.5rem 0.5rem;
+    /* Drastically reduced slide padding */
+    text-align: left !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .carousel-slide h2,
+  .carousel-slide p,
+  .carousel-slide ul {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-align: left !important;
+    width: 100%;
+  }
+
+  .carousel-slide h2 {
+    font-size: 2rem;
+  }
+
+  .carousel-slide p,
+  .carousel-slide ul {
+    font-size: 1.125rem;
+  }
+
+  .carousel-slide ul {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-left: 0;
+    list-style-position: inside;
+    /* Ensure bullets don't overflow */
+    word-break: break-word;
+  }
 }
 
 .project-card .tags {
@@ -384,7 +456,8 @@ body {
 .button {
   display: inline-block;
   background: var(--text-main);
-  color: white;
+  color: var(--bg-primary);
+  /* Use background color for text to ensure contrast */
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
   font-weight: 600;
