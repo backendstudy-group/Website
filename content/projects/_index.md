@@ -1,4 +1,4 @@
 ---
 title: "Projects"
-description: "Selected projects and implementations from our study group members."
+description: "Open-source systems built session by session. Each project is a study in depth."
 ---

@@ -1,4 +1,4 @@
 ---
 title: "Events"
-description: "Meetups, guest lectures, and deep-dive workshops."
+description: "Paper reviews, implementation workshops, and live system demos."
 ---

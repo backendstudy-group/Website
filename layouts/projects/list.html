@@ -1,0 +1,91 @@
+{{ define "main" }}
+<section class="page-header">
+  <div class="container text-center">
+    <span class="section-label">Build Log</span>
+    <h1 style="font-size:3rem;font-weight:800;letter-spacing:-0.02em;margin-top:0.5rem;margin-bottom:1rem;">Projects</h1>
+    <p style="font-size:1.125rem;color:var(--text-muted);line-height:1.7;margin:0;">
+      Open-source systems built session by session. Each project is a study in depth.
+    </p>
+  </div>
+</section>
+
+<section class="project-list-section">
+  <div class="project-list-grid">
+    {{ range .Pages.ByDate.Reverse }}
+    <div class="card-base project-card" style="overflow:hidden;cursor:pointer;" onclick="window.location='{{ .RelPermalink }}'">
+
+        <!-- Terminal code preview or image -->
+        {{ if .Params.codeImage }}
+        <div class="project-code-preview" style="min-height:220px;overflow:hidden;">
+          <img src="{{ .Params.codeImage }}" alt="Code preview" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        {{ else }}
+        <div class="project-code-preview" style="min-height:220px;">
+          <div class="terminal-bar">
+            <span class="terminal-dot terminal-dot-red"></span>
+            <span class="terminal-dot terminal-dot-yellow"></span>
+            <span class="terminal-dot terminal-dot-green"></span>
+            <span class="terminal-filename">{{ .File.ContentBaseName }}.go</span>
+          </div>
+          <div class="terminal-content">{{ with .Params.code }}{{ . }}{{ else }}// {{ .Title }}
+package main
+
+func main() {
+    // implementation
+}{{- end }}</div>
+        </div>
+        {{ end }}
+
+        <!-- Content -->
+        <div class="project-content" style="padding:2rem 2rem 2rem 2.5rem;gap:1.25rem;display:flex;flex-direction:column;justify-content:center;">
+          <div class="project-list-meta">
+            <span class="project-list-meta-date">{{ .Date.Format "Jan 2006" }}</span>
+            {{ with index .Params.tags 0 }}
+            <span class="project-list-meta-dot">·</span>
+            <span class="project-list-meta-tag">{{ . }}</span>
+            {{ end }}
+          </div>
+
+          <h2 style="margin:0;">{{ .Title }}</h2>
+
+          <p style="color:var(--text-muted);line-height:1.7;margin:0;font-size:0.9375rem;">
+            {{ .Params.summary | default .Description }}
+          </p>
+
+          {{ with .Params.features }}
+          <div class="project-features-grid">
+            {{ range . }}
+            <div class="project-feature-item">
+              <div class="project-feature-title">{{ .title }}</div>
+              <div class="project-feature-desc">{{ .description }}</div>
+            </div>
+            {{ end }}
+          </div>
+          {{ end }}
+
+          <div class="tags">
+            {{ range .Params.tags }}<span class="tag-pill">{{ . }}</span>{{ end }}
+          </div>
+
+          <div class="project-links">
+            {{ with .Params.github }}
+            <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              View Source
+            </a>
+            {{ end }}
+            {{ with .Params.demo }}
+            <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Live Demo
+            </a>
+            {{ end }}
+          </div>
+        </div>
+    </div>
+    {{ else }}
+    <p style="text-align:center;color:var(--text-muted);padding:5rem 0;">No projects yet. Check back soon.</p>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
