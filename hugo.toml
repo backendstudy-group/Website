@@ -1,5 +1,5 @@
-baseURL = 'https://example.org/'
-languageCode = 'en-us'
+baseURL = 'https://backendstudy.group/'
+locale = 'en-us'
 title = 'Backend Study Group'
 
 [menu]
