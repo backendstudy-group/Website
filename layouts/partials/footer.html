@@ -1,5 +1,26 @@
 <footer class="site-footer">
   <div class="container">
-    <p>&copy; {{ now.Format "2006" }} {{ .Site.Title }}.</p>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>BSG (Chernobyl)</h4>
+        <p>
+          A technical study group mastering the complexities of backend and
+          distributed systems.
+        </p>
+      </div>
+      <div class="footer-nav">
+        <p class="footer-nav-label">Navigate</p>
+        <ul class="footer-nav-links">
+          {{ range .Site.Menus.main }}
+          <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>
+        &copy; {{ now.Format "2006" }} Backend Study Group. All rights reserved.
+      </p>
+    </div>
   </div>
 </footer>

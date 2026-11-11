@@ -1,44 +1,75 @@
 {{ define "main" }}
 <div class="landing-page">
-  <!-- Hero Section -->
+
+  <!-- ── Hero ── -->
   <section class="hero section">
-    <!-- Illustrations -->
     <div class="illustration ill-cloud">
       <img src="{{ "/images/cloud.png" | relURL }}" alt="Cloud Computing">
     </div>
     <div class="illustration ill-server">
       <img src="{{ "/images/server.png" | relURL }}" alt="Backend Server">
     </div>
-    <!-- <div class="illustration ill-systems">
-      <img src="{{ "/images/systems.png" | relURL }}" alt="Systems Engineering">
-    </div> -->
 
     <div class="container">
-      <h1 class="hero-title">{{ .Title }}</h1>
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Open study group &middot; All levels welcome
+      </div>
+      <h1 class="hero-title">
+        <span>{{ .Params.title_line1 | default .Title }}</span>
+        <br>
+        {{ with .Params.title_line2 }}<span>{{ . }}</span>{{ end }}
+      </h1>
       <p class="hero-tagline">{{ .Params.tagline | default .Site.Params.description }}</p>
+      <div class="hero-cta">
+        <a href="/projects/" class="btn-primary">
+          View Projects
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <a href="/events/" class="btn-outline">Upcoming Events</a>
+      </div>
     </div>
   </section>
 
-  <!-- Carousel Section (Mission & Study) -->
-  <div class="section">
-    <div class="carousel-container">
-      <div id="carousel-track" class="carousel-track">
-        <div class="carousel-slide active">
-          <div class="container">
-            <h2>Our Mission</h2>
-            <p>We are a community of engineers and students dedicated to mastering the complexities of backend systems.
-              Our sessions range from white-paper reviews to hands-on distributed systems implementation.</p>
+  <!-- ── Mission / What We Study Carousel ── -->
+  <div style="padding: 4rem 1.5rem;">
+    <div id="carousel-fade" class="carousel-fade-container">
+      <div class="carousel-slide active">
+        <div class="carousel-slide-label">Our Mission</div>
+        <h2>Building great systems, together.</h2>
+        <p>We are a community of engineers and students dedicated to mastering the complexities of backend systems. Our sessions range from white-paper reviews to hands-on distributed systems implementation.</p>
+      </div>
+      <div class="carousel-slide">
+        <div class="carousel-slide-label">What We Study</div>
+        <h2>Deep in the stack.</h2>
+        <div class="carousel-topic-grid">
+          <div class="carousel-topic-item">
+            <span class="carousel-topic-icon">⚡</span>
+            <div>
+              <div class="carousel-topic-title">Distributed Systems</div>
+              <div class="carousel-topic-desc">Consensus algorithms like Paxos and Raft.</div>
+            </div>
           </div>
-        </div>
-        <div class="carousel-slide">
-          <div class="container">
-            <h2>What We Study</h2>
-            <ul>
-              <li><strong>Distributed Systems:</strong> Consensus algorithms like Raft.</li>
-              <li><strong>Databases:</strong> LSM-trees and query optimization.</li>
-              <li><strong>Networking:</strong> TCP/IP and HTTP/3 internals.</li>
-              <li><strong>Performance:</strong> Profiling and eBPF magic.</li>
-            </ul>
+          <div class="carousel-topic-item">
+            <span class="carousel-topic-icon">🗄️</span>
+            <div>
+              <div class="carousel-topic-title">Databases</div>
+              <div class="carousel-topic-desc">LSM-trees, B-trees, and query optimization.</div>
+            </div>
+          </div>
+          <div class="carousel-topic-item">
+            <span class="carousel-topic-icon">🌐</span>
+            <div>
+              <div class="carousel-topic-title">Networking</div>
+              <div class="carousel-topic-desc">TCP/IP, HTTP/3, and low-latency communication.</div>
+            </div>
+          </div>
+          <div class="carousel-topic-item">
+            <span class="carousel-topic-icon">📊</span>
+            <div>
+              <div class="carousel-topic-title">Performance</div>
+              <div class="carousel-topic-desc">Profiling, eBPF, and systems-level optimization.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -47,122 +78,143 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const track = document.getElementById('carousel-track');
-      const dotsContainer = document.getElementById('carousel-dots');
-      const slides = Array.from(track.children);
-      let currentIndex = 0;
-      let autoPlay;
+    (function () {
+      var container = document.getElementById('carousel-fade');
+      var dotsEl    = document.getElementById('carousel-dots');
+      var slides, dots, current = 0, timer;
 
-      // Create dots
-      slides.forEach((_, index) => {
-        const dot = document.createElement('button');
-        dot.classList.add('carousel-dot');
-        if (index === 0) dot.classList.add('active');
-        dot.addEventListener('click', () => goToSlide(index));
-        dotsContainer.appendChild(dot);
+      document.addEventListener('DOMContentLoaded', function () {
+        slides = Array.from(container.querySelectorAll('.carousel-slide'));
+        slides.forEach(function (_, i) {
+          var d = document.createElement('button');
+          d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+          d.addEventListener('click', function () { goTo(i); });
+          dotsEl.appendChild(d);
+        });
+        dots = Array.from(dotsEl.children);
+        container.addEventListener('mouseenter', function () { clearInterval(timer); });
+        container.addEventListener('mouseleave', reset);
+        reset();
       });
 
-      const dots = Array.from(dotsContainer.children);
-
-      function goToSlide(index) {
-        currentIndex = index;
-        const offset = currentIndex * (slides[0].offsetWidth + 20); // 100% + margin
-        track.style.transform = `translateX(-${offset}px)`;
-
-        slides.forEach((slide, i) => slide.classList.toggle('active', i === currentIndex));
-        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-
-        resetTimer();
+      function goTo(i) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = i;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+        reset();
       }
 
-      function nextSlide() {
-        goToSlide((currentIndex + 1) % slides.length);
+      function reset() {
+        clearInterval(timer);
+        timer = setInterval(function () { goTo((current + 1) % slides.length); }, 5000);
       }
-
-      function resetTimer() {
-        clearInterval(autoPlay);
-        autoPlay = setInterval(nextSlide, 5000);
-      }
-
-      resetTimer();
-    });
+    })();
   </script>
 
-  <!-- Projects Preview Section -->
+  <!-- ── Recent Projects ── -->
   <section class="section white-bg-section project-showcase">
     <div class="container text-center">
-      <span class="meta"
-        style="color: var(--primary); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.875rem;">Build
-        Log</span>
-      <h2 style="font-size: 3rem; margin-top: 1rem;">Recent Projects</h2>
+      <span class="section-label">Build Log</span>
+      <h2 style="font-size:2.25rem;margin-top:0.5rem;margin-bottom:0.75rem;">Recent Projects</h2>
+      <p style="color:var(--text-muted);max-width:420px;margin:0 auto;">Open-source implementations we've built together, session by session.</p>
       <div class="grid">
         {{ range first 3 (where .Site.RegularPages "Section" "projects") }}
         <div class="project-card">
-          <div class="project-image-placeholder">
-            <span>&lt;Code /&gt;</span>
+          <div class="project-code-preview">
+            <div class="terminal-bar">
+              <span class="terminal-dot terminal-dot-red"></span>
+              <span class="terminal-dot terminal-dot-yellow"></span>
+              <span class="terminal-dot terminal-dot-green"></span>
+              <span class="terminal-filename">{{ .Slug }}.go</span>
+            </div>
+            <div class="terminal-content">{{ with .Params.code }}{{ . }}{{ else }}// {{ .Title }}
+package main
+
+func main() {
+    // implementation
+}{{- end }}</div>
           </div>
           <div class="project-content">
             <span class="meta">{{ .Date.Format "Jan 2006" }}</span>
             <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-            <p class="summary">{{ .Summary | truncate 150 }}</p>
+            <p class="summary">{{ .Description | default (.Summary | truncate 150) }}</p>
+            <div class="tags">
+              {{ range .Params.tags }}<span class="tag-pill">{{ . }}</span>{{ else }}<span class="tag-pill">Systems</span><span class="tag-pill">Backend</span>{{ end }}
+            </div>
             <div class="project-links">
               {{ with .Params.github }}
               <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <path
-                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                  </path>
-                </svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                 Source
               </a>
               {{ end }}
               {{ with .Params.demo }}
               <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="2" y1="12" x2="22" y2="12"></line>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                  </path>
-                </svg>
-                Demo
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Live Demo
               </a>
               {{ end }}
-            </div>
-            <div class="tags">
-              <span class="tag">System</span>
-              <span class="tag">Backend</span>
             </div>
           </div>
         </div>
         {{ end }}
       </div>
-      <div class="cta" style="margin-top: 4rem;">
-        <a href="/projects/" class="button"
-          style="padding: 1rem 2.5rem; border-radius: 9999px; font-size: 1.125rem;">Explore All Projects</a>
+      <div style="margin-top:2.5rem;">
+        <a href="/projects/" class="btn-outline">Explore All Projects →</a>
       </div>
     </div>
   </section>
 
-  <!-- Events Preview Section -->
-  <section class="section white-bg-section">
-    <div class="container text-center">
-      <h2>Upcoming Events</h2>
-      <div class="grid">
-        {{ range first 3 (where .Site.RegularPages "Section" "events") }}
-        <div class="card">
-          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          <p class="meta">{{ .Date.Format "January 2, 2006" }}</p>
-          <p>{{ .Summary }}</p>
-        </div>
+  <!-- ── Upcoming Events ── -->
+  <section class="section" style="padding-top:5rem;padding-bottom:5rem;">
+    <div class="container text-center" style="max-width:64rem;">
+      <span class="section-label">Sessions</span>
+      <h2 style="font-size:2.25rem;margin-top:0.5rem;margin-bottom:0.75rem;">Upcoming Events</h2>
+      <p style="color:var(--text-muted);max-width:500px;margin:0 auto;font-size:1rem;">Paper reviews, live demos, and hands-on implementation workshops.</p>
+      <div class="events-preview-grid">
+        {{ range first 4 (where .Site.RegularPages "Section" "events") }}
+        <a href="{{ .RelPermalink }}" class="event-preview-card">
+          <div class="event-preview-banner">
+            {{ if .Params.banner }}
+            <img src="{{ .Params.banner | relURL }}" alt="{{ .Title }}">
+            {{ else }}
+            <div class="event-preview-placeholder">&lt;event /&gt;</div>
+            {{ end }}
+          </div>
+          <div class="event-preview-content">
+            <span class="event-date-mono">{{ .Date.Format "Jan 2, 2006" }}</span>
+            <h3>{{ .Title }}</h3>
+            <p>{{ .Description | default .Summary }}</p>
+            <div class="read-more-link">
+              Read more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </div>
+          </div>
+        </a>
         {{ end }}
       </div>
-      <div class="cta">
-        <a href="/events/" class="button">View All Events</a>
+      <div style="margin-top:2.5rem;">
+        <a href="/events/" class="btn-outline">View All Events →</a>
       </div>
     </div>
   </section>
+
+  <!-- ── Join CTA ── -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <span class="cta-icon">⚙️</span>
+        <h2>Want to join a session?</h2>
+        <p>We meet regularly to go deep on distributed systems, databases, and performance engineering. All backgrounds welcome — bring your curiosity.</p>
+        <a href="/events/" class="btn-primary">
+          See upcoming sessions
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
 </div>
 {{ end }}

@@ -1,5 +1,7 @@
 ---
 title: "Backend Study Group"
+title_line1: "Backend"
+title_line2: "Study Group"
 tagline: '"We shall build good ships here; at a profit if we can, at a loss if we must, but always good ships"'
 ---
 

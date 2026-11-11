@@ -1,56 +1,56 @@
 {{ define "main" }}
-<div class="page-header section">
+<div class="page-header">
   <div class="container text-center">
-    <h1>{{ .Title }}</h1>
+    <span class="section-label">{{ .Title }}</span>
+    <h1 style="font-size:3rem;margin-top:0.5rem;">{{ .Title }}</h1>
     {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
   </div>
 </div>
 
-<section class="section white-bg-section project-showcase">
+<section class="section white-bg-section project-showcase" style="padding-top:0;">
   <div class="container">
     <div class="grid">
       {{ range .Pages }}
       <div class="project-card">
-        <div class="project-image-placeholder">
-          <span>&lt;Code /&gt;</span>
+        <div class="project-code-preview">
+          <div class="terminal-bar">
+            <span class="terminal-dot terminal-dot-red"></span>
+            <span class="terminal-dot terminal-dot-yellow"></span>
+            <span class="terminal-dot terminal-dot-green"></span>
+            <span class="terminal-filename">{{ .Slug }}.go</span>
+          </div>
+          <div class="terminal-content">{{ with .Params.code }}{{ . }}{{ else }}// {{ .Title }}
+package main
+
+func main() {
+    // implementation
+}{{- end }}</div>
         </div>
         <div class="project-content">
           <span class="meta">{{ .Date.Format "Jan 2006" }}</span>
           <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-          <p class="summary">{{ .Summary | truncate 200 }}</p>
+          <p class="summary">{{ .Description | default (.Summary | truncate 200) }}</p>
+          <div class="tags">
+            {{ range .Params.tags }}<span class="tag-pill">{{ . }}</span>{{ else }}<span class="tag-pill">Systems</span><span class="tag-pill">Backend</span>{{ end }}
+          </div>
           <div class="project-links">
             {{ with .Params.github }}
             <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path
-                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                </path>
-              </svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
               Source
             </a>
             {{ end }}
             {{ with .Params.demo }}
             <a href="{{ . }}" class="icon-link" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="2" y1="12" x2="22" y2="12"></line>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                </path>
-              </svg>
-              Demo
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Live Demo
             </a>
             {{ end }}
-          </div>
-          <div class="tags" style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
-            <span class="tag">System</span>
-            <span class="tag">Backend</span>
           </div>
         </div>
       </div>
       {{ else }}
-      <p>No posts found.</p>
+      <p style="text-align:center;color:var(--text-muted);">No posts found.</p>
       {{ end }}
     </div>
   </div>

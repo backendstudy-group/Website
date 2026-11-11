@@ -6,14 +6,17 @@ title = 'Backend Study Group'
   [[menu.main]]
     name = 'Home'
     url = '/'
+    pageRef = '/'
     weight = 10
   [[menu.main]]
     name = 'Projects'
     url = '/projects/'
+    pageRef = '/projects'
     weight = 20
   [[menu.main]]
     name = 'Events'
     url = '/events/'
+    pageRef = '/events'
     weight = 30
 
 [params]

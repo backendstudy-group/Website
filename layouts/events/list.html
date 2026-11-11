@@ -1,62 +1,69 @@
 {{ define "main" }}
-<div class="page-header section">
+<section class="page-header">
   <div class="container text-center">
-    <h1>{{ .Title }}</h1>
-    {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+    <span class="section-label">Sessions</span>
+    <h1 style="font-size:3rem;font-weight:800;letter-spacing:-0.02em;margin-top:0.5rem;margin-bottom:1rem;">Events</h1>
+    <p style="font-size:1.125rem;color:var(--text-muted);line-height:1.7;margin:0;">
+      Paper reviews, implementation workshops, and live system demos.
+    </p>
   </div>
-</div>
+</section>
 
-<section class="section events-list">
-  <div class="container">
-    <div class="events-grid">
-      {{ range .Pages.ByDate.Reverse }}
-      <div class="event-card">
-        <div class="event-banner">
-          {{ if .Params.banner }}
-          <img src="{{ .Params.banner | relURL }}" alt="{{ .Title }} Banner">
-          {{ else }}
-          <div class="event-image-placeholder">
-            <span>{{ .Title }}</span>
-          </div>
-          {{ end }}
-        </div>
-        <div class="event-content">
-          <div class="event-header">
-            <span class="meta">{{ .Date.Format "January 2, 2006" }}</span>
-            <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-          </div>
-          
-          <p class="summary">{{ .Description }}</p>
+<section style="padding-bottom:6rem;padding-left:1.5rem;padding-right:1.5rem;">
+  <div style="max-width:64rem;margin:0 auto;display:flex;flex-direction:column;gap:2.5rem;">
+    {{ range .Pages.ByDate.Reverse }}
+    <div class="card-base" style="overflow:hidden;">
 
-          {{ with .Params.agenda }}
-          <div class="event-agenda">
-            <h3>Agenda</h3>
-            <ul>
-              {{ range . }}
-              <li>{{ . }}</li>
-              {{ end }}
-            </ul>
-          </div>
-          {{ end }}
-
-          <div class="event-footer">
-            {{ with .Params.photos_url }}
-            <a href="{{ . }}" class="button photos-button" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
-              </svg>
-              View Photo Album
-            </a>
-            {{ end }}
-            <a href="{{ .RelPermalink }}" class="icon-link">Read More →</a>
-          </div>
+      <!-- Banner with date badge -->
+      <div class="event-list-banner">
+        {{ if .Params.banner }}
+        <img src="{{ .Params.banner | relURL }}" alt="{{ .Title }}">
+        {{ else }}
+        <div class="event-list-banner-placeholder">&lt;session /&gt;</div>
+        {{ end }}
+        <div class="event-list-date-badge">
+          <span>{{ .Date.Format "January 2, 2006" }}</span>
         </div>
       </div>
-      {{ else }}
-      <p class="text-center">No events found.</p>
-      {{ end }}
+
+      <!-- Content -->
+      <div class="event-list-content">
+        <div>
+          <h2 class="event-list-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+          <p class="event-list-desc">{{ .Description }}</p>
+        </div>
+
+        {{ with .Params.agenda }}
+        <div class="event-list-agenda">
+          <h3 class="event-list-agenda-label">Agenda</h3>
+          <div class="event-list-agenda-grid">
+            {{ range $i, $item := . }}
+            <div class="event-list-agenda-item">
+              <span class="event-list-agenda-num">{{ add $i 1 }}</span>
+              <span>{{ $item }}</span>
+            </div>
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+
+        <div class="event-list-footer">
+          {{ with .Params.photos_url }}
+          <a href="{{ . }}" class="btn-primary" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            View Photo Album
+          </a>
+          {{ end }}
+          <a href="{{ .RelPermalink }}" class="event-list-read-more">
+            Read more
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+      </div>
     </div>
+    {{ else }}
+    <p style="text-align:center;color:var(--text-muted);padding:5rem 0;">No events scheduled yet. Check back soon.</p>
+    {{ end }}
   </div>
 </section>
 {{ end }}
