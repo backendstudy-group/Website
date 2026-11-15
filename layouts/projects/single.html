@@ -1,0 +1,55 @@
+{{ define "main" }}
+<article class="single-page project-detail">
+  <header class="page-header">
+    <div class="container text-center">
+      <span class="section-label">{{ .Section | title }}</span>
+      <h1 style="font-size:3rem;margin-top:0.5rem;">{{ .Title }}</h1>
+      <p style="font-family:var(--font-mono);font-size:0.875rem;color:var(--primary);margin-top:0.75rem;">{{ .Date.Format "January 2, 2006" }}</p>
+      {{ with .Params.summary | default .Description }}
+      <p class="project-detail-lead">{{ . }}</p>
+      {{ end }}
+      {{ with .Params.tags }}
+      <div class="tags project-detail-tags">
+        {{ range . }}<span class="tag-pill">{{ . }}</span>{{ end }}
+      </div>
+      {{ end }}
+      <div class="project-detail-links">
+        {{ partial "project-links.html" . }}
+      </div>
+    </div>
+  </header>
+
+  {{ if or .Params.features .Params.code .Params.codeImage }}
+  <section class="project-detail-overview">
+    <div class="project-detail-wide">
+      {{ with .Params.features }}
+      <div class="project-features-grid">
+        {{ range . }}
+        <div class="project-feature-item">
+          <div class="project-feature-title">{{ .title }}</div>
+          <div class="project-feature-desc">{{ .description }}</div>
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      {{ if or .Params.code .Params.codeImage }}
+      <div class="project-detail-code">
+        {{ partial "project-code.html" . }}
+      </div>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  <section style="padding-bottom:5rem;">
+    <div class="container prose">
+      {{ .Content }}
+    </div>
+  </section>
+
+  <div style="padding-bottom:5rem;text-align:center;">
+    <a href="{{ .Parent.RelPermalink }}" class="btn-outline">&larr; Back to {{ .Parent.Title }}</a>
+  </div>
+</article>
+{{ end }}

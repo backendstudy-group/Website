@@ -4,6 +4,7 @@ date: 2026-11-15
 description: "A fast, local-first desktop library and professional reader for PDFs and ebooks."
 summary: "A Tauri + Rust desktop app that indexes your PDFs and ebooks where they sit on disk, pulls real metadata and covers, and gives you a reader built for study: annotations, OCR, offline read-aloud, notes, flashcards and full-text search. Everything stays on your machine."
 github: "https://github.com/devvspaces/local-lib-on"
+codeLang: "rs"
 tags: ["Rust", "Tauri", "SQLite", "React", "TypeScript"]
 features:
   - title: "Library that indexes in place"

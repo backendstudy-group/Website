@@ -1,0 +1,17 @@
+{{- /* Code preview panel for a project. Context: the project page.
+     Renders a screenshot (codeImage), a terminal snippet (code + lang), or nothing. */ -}}
+{{- with .Params.codeImage }}
+<div class="project-code-preview">
+  <img src="{{ . }}" alt="Code preview" class="project-code-image">
+</div>
+{{- else }}{{ with .Params.code }}
+<div class="project-code-preview">
+  <div class="terminal-bar">
+    <span class="terminal-dot terminal-dot-red"></span>
+    <span class="terminal-dot terminal-dot-yellow"></span>
+    <span class="terminal-dot terminal-dot-green"></span>
+    <span class="terminal-filename">{{ $.File.ContentBaseName }}.{{ $.Params.codeLang | default "txt" }}</span>
+  </div>
+  <div class="terminal-content">{{ . }}</div>
+</div>
+{{- end }}{{ end }}
