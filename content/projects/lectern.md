@@ -4,6 +4,7 @@ date: 2026-11-15
 description: "A local-first desktop app that turns open courses into study courses you own."
 summary: "A Tauri + Rust desktop app that turns YouTube playlists, MIT OCW, NPTEL, OpenStax, LibreTexts and Open Yale into structured courses with offline video, timestamped notes, progress tracking and spaced repetition. All data stays on your machine."
 github: "https://github.com/devvspaces/oplearn"
+codeLang: "rs"
 tags: ["Rust", "Tauri", "SQLite", "React", "TypeScript"]
 features:
   - title: "Courses from open sources"

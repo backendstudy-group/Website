@@ -47,6 +47,10 @@ date: 2026-01-25
 description: "Brief summary of the project."
 github: "https://github.com/your-username/repo"
 demo: "https://your-demo.com"
+tags: ["Rust", "SQLite"]
+codeLang: "rs"        # file extension shown in the code panel (rs, go, py, ...)
+code: |               # optional snippet; the code panel is hidden if omitted
+  fn main() {}
 ---
 Your deep dive content here...
 ```
